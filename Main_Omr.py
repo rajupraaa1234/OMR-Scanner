@@ -5,12 +5,14 @@ from cv2 import THRESH_BINARY_INV
 import numpy as np
 import Utils
 #####################################################
-path = "1.jpg"
+path = "4.png"
 widhImg =500
 heightImg = 500
-question = 5
-choice = 5
-ans = [1,0,2,0,4]
+question = 10
+choice = 4
+#####################################################
+# Declare the Answer for 1 to 10 Question 
+ans = [0,2,3,3,1,0,2,3,1,3]
 #####################################################
 
 # PREPROCESSING
@@ -20,15 +22,16 @@ imgContours = img.copy()
 imgBiggestContours = img.copy()
 imgGray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 imgBlur = cv2.GaussianBlur(imgGray,(7,7),1)
-imgCanny = cv2.Canny(imgBlur,40,90)
+imgCanny = cv2.Canny(imgBlur,40,80)
 
 #Finding All Contours
 countours , hirerarchy = cv2.findContours(imgCanny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
-cv2.drawContours(imgContours,countours,-1,(0,255,0),5)
+cv2.drawContours(imgContours,countours,-1,(0,255,0),4)
 
 
 #find Rectangle
 rectCon = Utils.rectContous(countours)
+print("size--->",rectCon)
 biggestCont = Utils.getCornorPoints(rectCon[0])
 
 if biggestCont.size != 0:
@@ -42,7 +45,7 @@ if biggestCont.size != 0:
 
     #Apply Thershold (for detect which option has been marked )
     imgWrapGray = cv2.cvtColor(imgWrapColored,cv2.COLOR_BGR2GRAY)
-    imgThersh = cv2.threshold(imgWrapGray,150,255,THRESH_BINARY_INV)[1]
+    imgThersh = cv2.threshold(imgWrapGray,100,225,THRESH_BINARY_INV)[1]
 
     # getting all boxes merked and un marked both in linear list
     boxes = Utils.splitBox(imgThersh)
@@ -70,7 +73,7 @@ if biggestCont.size != 0:
         myIndex.append(myIndexVal[0][0])
     print(myIndex)
 
-    # now finding Score     
+   # now finding Score     
     score = 0
     for i in range(0,question):
         if ans[i] == myIndex[i]:
