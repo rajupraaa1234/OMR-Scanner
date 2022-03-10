@@ -5,8 +5,8 @@ from cv2 import contourArea
 import numpy as np
 
 #############################
-question = 5
-choice = 5
+question = 10
+choice = 4
 #############################
 
 ## TO STACK ALL THE IMAGES IN ONE WINDOW
@@ -49,6 +49,7 @@ def stackImages(imgArray,scale,lables=[]):
 
 def rectContous(contours):
     rectCon=[]
+    count =0
     for i in contours:
         area = cv2.contourArea(i)
         if area>50:
@@ -56,9 +57,12 @@ def rectContous(contours):
             approx = cv2.approxPolyDP(i,0.02*peri,True)    # giving me 4 points of coordinate
             if len(approx)==4:
                 rectCon.append(i)
+                count +=1
+    print("count" , count)            
     rectCon = sorted(rectCon,key=cv2.contourArea,reverse=True)
     return rectCon 
         
+# for find 4 point        
 def getCornorPoints(cont):
     peri = cv2.arcLength(cont,True)
     approx = cv2.approxPolyDP(cont,0.02*peri,True)
@@ -81,8 +85,8 @@ def reorder(myPoints):
     add = myPoints.sum(1)
     #print(add)
     #print(np.argmax(add))
-    myPointsNew[0] = myPoints[np.argmin(add)]  #[0,0]
-    myPointsNew[3] =myPoints[np.argmax(add)]   #[w,h]
+    myPointsNew[0] = myPoints[np.argmin(add)]  #[0,0]      # origin
+    myPointsNew[3] =myPoints[np.argmax(add)]   #[w,h]      # Max height and width
     diff = np.diff(myPoints, axis=1)
     myPointsNew[1] =myPoints[np.argmin(diff)]  #[w,0]
     myPointsNew[2] = myPoints[np.argmax(diff)] #[h,0]  
@@ -91,13 +95,16 @@ def reorder(myPoints):
 
 # Sp
 def splitBox(img):
+    count = 0
     rows = np.vsplit(img,question)   
     boxes = []
     for r in rows:
         cols = np.hsplit(r,choice)
         for box in cols:
             boxes.append(box)
-            cv2.imshow("Splite",box)
+            if(count<=4):
+                cv2.imshow("Splite",box)
+                count +=1
 
     return boxes
 
