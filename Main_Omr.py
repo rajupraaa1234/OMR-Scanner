@@ -42,7 +42,7 @@ cv2.drawContours(imgContours,countours,-1,(0,255,0),4)
 #find Rectangle
 rectCon = Utils.rectContous(countours)
 #print("size--->",rectCon)
-biggestCont = Utils.getCornorPoints(rectCon[5])
+#biggestCont = Utils.getCornorPoints(rectCon[5])
 
 
 
