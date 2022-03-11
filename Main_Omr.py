@@ -46,6 +46,7 @@ count = 0
 FinalGrade = 0
 UnAttempted = 0
 Invaide = 0
+wrong = 0
 
 for i in AllMCQBoxes:
     biggestCont = Utils.getCornorPoints(rectCon[i])
@@ -57,14 +58,17 @@ for i in AllMCQBoxes:
         elif CurrMcqBox[j] == choice+1:
             Invaide +=1
         elif CurrMcqBox[j] == choice+2:
-            UnAttempted +=1     
+            UnAttempted +=1
+        else:
+            wrong +=1         
     count +=1
 
 def getResult():
     JsonRes = {
         "Result": FinalGrade,
         "Not_Attempted" : UnAttempted,
-        "Invalid" : Invaide
+        "Invalid" : Invaide,
+        "wrong" : wrong
     }
     return json.dumps(JsonRes)
    
