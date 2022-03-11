@@ -62,7 +62,7 @@ def rectContous(contours):
             if len(approx)==4:
                 rectCon.append(i)
                 count +=1
-    print("count" , count)            
+    #print("count" , count)            
     rectCon = sorted(rectCon,key=cv2.contourArea,reverse=True)
     return rectCon 
         
@@ -173,15 +173,22 @@ def getAttemtedQuestionList(biggestCont,imgBiggestContours,img,ans):
             if(countC == choice):
                 countR +=1
                 countC = 0
-        print(myPixelVal) 
-
+        #print(myPixelVal) 
+        
         #Now I am finding all the marked column nnumber w.r.t Question and appended in myIndex arr
         myIndex = []
         for x in range(0,question):
             arr = myPixelVal[x]
-            myIndexVal = np.where(arr == np.amax(arr))
-            myIndex.append(myIndexVal[0][0])
-        print(myIndex)
+            if isAttemtedOrValid(arr) == TRUE:
+                myIndexVal = np.where(arr == np.amax(arr))
+                myIndex.append(myIndexVal[0][0])
+            else:
+                temp = []
+                for j in range(0,choice):
+                    temp.append(choice+1)
+                myIndex.append(temp)   
+
+        #print(myIndex)
 
         # now finding Score     
         score = 0
@@ -189,8 +196,10 @@ def getAttemtedQuestionList(biggestCont,imgBiggestContours,img,ans):
             if ans[i] == myIndex[i]:
                 score +=1
 
-        print("Score for current box : ",score)  
+        #print("Score for current box : ",score)  
 
+        # cv2.imshow("imgThersh",imgThersh)
+        # cv2.waitKey(0)
         return myIndex      
 
    
@@ -198,12 +207,23 @@ def getAttemtedQuestionList(biggestCont,imgBiggestContours,img,ans):
         # imageArray = ([img,imgGray,imgBlur,imgCanny],[imgContours,imgBiggestContours,imgWrapColored,imgThersh] )
         # cv2.imshow("imgContours",imgContours)
         # cv2.imshow("imgBiggestContours",imgBiggestContours)
-        # cv2.imshow("imgThersh",imgThersh)
+        
         # imgStacked = stackImages(imageArray,0.5)
         # cv2.imshow("imgStacked",imgStacked)
         # cv2.waitKey(0)
+    
 
-
+def isAttemtedOrValid(arr):
+    thershold = 3400
+    count = 0
+    for i in arr:
+        if i >= thershold :
+            count +=1
+    if count == 1 :
+        return TRUE
+    else:
+        return FALSE 
+                      
 
 
 
